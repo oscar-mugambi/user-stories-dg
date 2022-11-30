@@ -2,7 +2,9 @@ import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { apiSlice } from '../../app/api/apiSlice'
 
-const notesAdapter = createEntityAdapter({})
+const notesAdapter = createEntityAdapter({
+  sortComparer: (a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1),
+})
 
 const initialState = notesAdapter.getInitialState()
 
@@ -29,10 +31,44 @@ export const noteApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    addNote: builder.mutation({
+      query: (initialNoteState) => ({
+        url: '/notes',
+        method: 'POST',
+        body: {
+          ...initialNoteState,
+        },
+      }),
+      invalidatesTags: [{ type: 'Note', id: 'List' }],
+    }),
+    updateNote: builder.mutation({
+      query: (initialNoteState) => ({
+        url: '/notes',
+        method: 'PATCH',
+        body: {
+          ...initialNoteState,
+        },
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Note', id: arg.id }],
+    }),
+
+    deleteNote: builder.mutation({
+      query: ({ id }) => ({
+        url: '/notes',
+        method: 'PATCH',
+        body: { id },
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Note', id: arg.id }],
+    }),
   }),
 })
 
-export const { useGetNotesQuery } = noteApiSlice
+export const {
+  useGetNotesQuery,
+  useUpdateNoteMutation,
+  useAddNoteMutation,
+  useDeleteNoteMutation,
+} = noteApiSlice
 
 export const selectNoteResult = noteApiSlice.endpoints.getNotes.select()
 
@@ -42,7 +78,7 @@ const selectNoteData = createSelector(selectNoteResult, (noteResult) => noteResu
 
 // getSelectors creates these selectors and we rename them with aliases
 
-const {
+export const {
   selectAll: selectAllNotes,
   selectById: selectNoteById,
   selectIds: selectNoteIds,

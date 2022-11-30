@@ -1,4 +1,5 @@
 import React from 'react'
+import User from './User'
 import { useGetUsersQuery } from './usersApiSlice'
 
 const UsersList = () => {
@@ -6,7 +7,9 @@ const UsersList = () => {
 
   let content
 
-  if (isLoading) content = <p>Loading...</p>
+  if (isLoading) {
+    content = <p>Loading...</p>
+  }
 
   if (isError) {
     content = <p className='errmsg'>{error?.data?.message}</p>
