@@ -6,14 +6,13 @@ const usersAdapter = createEntityAdapter({})
 
 const initialState = usersAdapter.getInitialState()
 
-export const userApiSlice = apiSlice.injectEndpoints({
+export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => ({
         url: '/users',
         validateStatus: (response, result) => response.status === 200 && !result.isError,
       }),
-      keepUnusedDataFor: 5,
       transformResponse: (responseData) => {
         const loadedUsers = responseData.map((user) => {
           user.id = user._id
@@ -30,7 +29,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       },
     }),
 
-    addNewUsers: builder.mutation({
+    addNewUser: builder.mutation({
       query: (initialUserData) => ({
         url: '/users',
         method: 'POST',
@@ -78,12 +77,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetUsersQuery,
-  useAddNewUsersMutation,
+  useAddNewUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-} = userApiSlice
+} = usersApiSlice
 
-export const selectUserResult = userApiSlice.endpoints.getUsers.select()
+export const selectUserResult = usersApiSlice.endpoints.getUsers.select()
 
 //create memoized selector
 

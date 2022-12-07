@@ -3,7 +3,17 @@ import User from './User'
 import { useGetUsersQuery } from './usersApiSlice'
 
 const UsersList = () => {
-  const { data: users, isLoading, isSuccess, isError, error } = useGetUsersQuery()
+  const {
+    data: users,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetUsersQuery(undefined, {
+    pollingInterval: 600000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  })
 
   let content
 

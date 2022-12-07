@@ -1,5 +1,4 @@
 import { createSelector, createEntityAdapter } from '@reduxjs/toolkit'
-import { useSelector } from 'react-redux'
 import { apiSlice } from '../../app/api/apiSlice'
 
 const notesAdapter = createEntityAdapter({
@@ -8,14 +7,13 @@ const notesAdapter = createEntityAdapter({
 
 const initialState = notesAdapter.getInitialState()
 
-export const noteApiSlice = apiSlice.injectEndpoints({
+export const notesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotes: builder.query({
       query: () => ({
         url: '/notes',
         validateStatus: (response, result) => response.status === 200 && !result.isError,
       }),
-      keepUnusedDataFor: 5,
       transformResponse: (responseData) => {
         const loadedNotes = responseData.map((note) => {
           note.id = note._id
@@ -68,13 +66,14 @@ export const {
   useUpdateNoteMutation,
   useAddNoteMutation,
   useDeleteNoteMutation,
-} = noteApiSlice
+} = notesApiSlice
 
-export const selectNoteResult = noteApiSlice.endpoints.getNotes.select()
+// returns query result
+export const selectNotesResult = notesApiSlice.endpoints.getNotes.select()
 
 //create memoized selector
 
-const selectNoteData = createSelector(selectNoteResult, (noteResult) => noteResult.data)
+const selectNoteData = createSelector(selectNotesResult, (noteResult) => noteResult.data) // normalized  state object with ids and entities
 
 // getSelectors creates these selectors and we rename them with aliases
 
@@ -82,4 +81,5 @@ export const {
   selectAll: selectAllNotes,
   selectById: selectNoteById,
   selectIds: selectNoteIds,
+  // pass in a selector that returns the notes slice of state
 } = notesAdapter.getSelectors((state) => selectNoteData(state) ?? initialState)
