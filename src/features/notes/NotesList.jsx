@@ -9,7 +9,7 @@ const NotesList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetNotesQuery(undefined, {
+  } = useGetNotesQuery('notesList', {
     pollingInterval: 15000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -30,7 +30,7 @@ const NotesList = () => {
       ? ids.map((noteId) => <Note key={noteId} noteId={noteId} />)
       : null
 
-    content = (
+    return (
       <table className='table table--notes'>
         <thead className='table__thead'>
           <tr>
@@ -58,7 +58,5 @@ const NotesList = () => {
       </table>
     )
   }
-
-  return content
 }
 export default NotesList

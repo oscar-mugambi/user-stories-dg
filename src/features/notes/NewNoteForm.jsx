@@ -49,7 +49,7 @@ const NewNoteForm = ({ users }) => {
   const validTitleClass = !title ? 'form__input--incomplete' : ''
   const validTextClass = !text ? 'form__input--incomplete' : ''
 
-  const content = (
+  return (
     <>
       <p className={errClass}>{error?.data?.message}</p>
 
@@ -101,8 +101,6 @@ const NewNoteForm = ({ users }) => {
       </form>
     </>
   )
-
-  return content
 }
 
 export default NewNoteForm

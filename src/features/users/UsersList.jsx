@@ -9,7 +9,7 @@ const UsersList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery(undefined, {
+  } = useGetUsersQuery('usersList', {
     pollingInterval: 600000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
@@ -32,7 +32,7 @@ const UsersList = () => {
       ? ids.map((userId) => <User key={userId} userId={userId} />)
       : null
 
-    content = (
+    return (
       <table className='table table--users'>
         <thead className='table__thead'>
           <tr>
@@ -51,7 +51,5 @@ const UsersList = () => {
       </table>
     )
   }
-
-  return content
 }
 export default UsersList
