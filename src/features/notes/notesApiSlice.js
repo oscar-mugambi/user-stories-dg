@@ -15,13 +15,13 @@ export const notesApiSlice = apiSlice.injectEndpoints({
         validateStatus: (response, result) => response.status === 200 && !result.isError,
       }),
       transformResponse: (responseData) => {
-        if (!Array.isArray(responseData)) return null
-
-        const loadedNotes = responseData.map((note) => {
-          note.id = note._id
-          return note
-        })
-        return notesAdapter.setAll(initialState, loadedNotes)
+        if (Array.isArray(responseData)) {
+          const loadedNotes = responseData.map((note) => {
+            note.id = note._id
+            return note
+          })
+          return notesAdapter.setAll(initialState, loadedNotes)
+        }
       },
       providesTags: (result, error, arg) => {
         if (result?.ids) {
